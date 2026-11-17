@@ -1,0 +1,39 @@
+<!doctype html>
+<html lang="pt-BR">
+<head>
+  <meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1">
+  <meta name="theme-color" content="#111315"><title>TransitLink — análise de redes</title><link rel="stylesheet" href="/style.css"><link rel="stylesheet" href="/vendor/leaflet.css">
+</head>
+<body>
+  <main>
+    <!-- Área de trabalho: controles do grafo à esquerda e resultados à direita. -->
+    <section class="workspace">
+      <aside class="sidebar">
+        <!-- Seleção de cidade, tamanho de rede e resumo do feed carregado. -->
+        <div class="step"><b>01</b><div><h2>Carregar rede</h2><p>Selecione uma cidade</p></div></div>
+        <label class="control-label" for="subset-size">TAMANHO DO RECORTE REAL</label><select class="subset-select" id="subset-size"><option value="180">Compacto · até 180 paradas</option><option value="360">Médio · até 360 paradas</option><option value="600" selected>Amplo · até 600 paradas</option><option value="10000" id="full-curitiba-option">Curitiba inteira · só visualização</option></select>
+        <label class="control-label" for="city-select">CIDADE · FEED LOCAL</label><select class="subset-select" id="city-select" disabled><option>Carregando cidades…</option></select>
+        <button class="button secondary bundled" id="city-button" disabled>Carregar cidade · feed real</button>
+        <div id="network-summary" class="network-summary hidden"></div>
+        <div class="divider"></div>
+        <!-- Cenários de interrupção e execução do algoritmo. -->
+        <div class="step"><b>02</b><div><h2>Interrupções</h2><p>Desative linhas e compare conectividade</p></div></div>
+        <div id="route-list" class="route-list muted">Importe uma rede para listar as linhas.</div>
+        <button class="button secondary" id="analyze-button" disabled>Executar Floyd-Warshall</button>
+        <p class="limit-note">Recorte seleciona paradas geograficamente próximas; só preserva conexões consecutivas existentes no GTFS. Custo estático em metros. Floyd-Warshall: até 600 vértices.</p>
+      </aside>
+      <section class="mainpanel">
+        <!-- Consulta de caminhos, visualização cartográfica e matriz. -->
+        <div class="panel-head"><h2 id="panel-title">Sua rede começa aqui</h2></div>
+        <div id="empty-state" class="empty-state"><div class="empty-icon">⌁</div><h3>Carregue um feed GTFS</h3><p>O sistema usa paradas, linhas, viagens e sequências de parada do arquivo. Sem feed, nenhuma rota é simulada.</p></div>
+        <div id="network-view" class="hidden">
+          <div class="route-query"><label>ORIGEM<select id="origin" disabled><option value="">Selecione uma origem</option></select></label><span class="connector">→</span><label>DESTINO<select id="destination" disabled><option value="">Selecione um destino</option></select></label><button class="button primary" id="find-button" disabled>Encontrar caminho</button><button class="button secondary reset-route" id="reset-route-button" disabled>Limpar seleção</button></div>
+          <div class="map-wrap"><div class="map-title">MAPA DA REDE</div><div id="map" role="application" aria-label="Mapa interativo de paradas do transporte público"></div></div>
+          <div id="result" class="result hidden"></div>
+          <div class="metrics" id="metrics"></div>
+          <details class="matrix"><summary>Matriz de distâncias · bloco de até 40 × 40</summary><div class="matrix-tools"><span id="matrix-caption">Execute o algoritmo para consultar a matriz.</span><button class="button small" id="matrix-prev" disabled>Anterior</button><button class="button small" id="matrix-next" disabled>Próximo</button></div><div id="matrix-table" class="matrix-table"></div></details>
+        </div>
+      </section>
+    </section>
+  </main><script src="/vendor/leaflet.js"></script><script type="module" src="/app.js"></script>
+</body></html>
